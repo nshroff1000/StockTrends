@@ -1,6 +1,4 @@
+First you will need to run npm install after you clone the project.
+You must also download an ORACLE client otherwise none of the queries will run.
+To test the API, use an API testing service like Postman, etc.
 
-# StockTrends
-
-Run npm install
-Also, you will need to download Oracle Client from the following website:
-https://www.oracle.com/database/technologies/instant-client/
