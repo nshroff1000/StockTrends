@@ -17,7 +17,9 @@ const result = await connection.execute(
 return result;
 }
 
-
+/**
+Returns all the stock names.
+*/
 router.get('/stocks', async function(req, res) {
 	var connection = await oracledb.getConnection(dbconfig);
 	const result = await connection.execute(
@@ -27,6 +29,9 @@ router.get('/stocks', async function(req, res) {
 	res.json(result.rows);
 });
 
+/**
+Returns the stock info for a particular stock
+*/
 router.get('/stocks/:stock', async function(req, res) {
 	var current_stock = req.params.stock;
 
@@ -40,7 +45,10 @@ router.get('/stocks/:stock', async function(req, res) {
 	res.json(result.rows);
 });
 
-router.get('/trends/:stock', async function(req, res) {
+/**
+Gets all the daily trend values for the given stock ticker.
+*/
+router.get('/daily_trends/:stock', async function(req, res) {
 
 	var current_stock = req.params.stock;
 
@@ -57,8 +65,75 @@ WHERE STOCK_TICKER = :stock AND p.DAILY_DATE > sysdate - 50`,
 	res.json(result.rows);
 });
 
-router.get('/', function (req, res) {
-  res.send('Hello World!');
+/**
+Gets all the daily prices for the given stock ticker.
+*/
+router.get('/daily_price/:stock', async function(req, res) {
+
+	var current_stock = req.params.stock;
+
+	var connection = await oracledb.getConnection(dbconfig);
+	const result = await connection.execute(
+  	`SELECT STOCK_NAME, PRICE, DAILY_DATE
+FROM STOCKS s 
+    JOIN PRICES p ON s.stock_id = p.stock_id
+WHERE STOCK_TICKER = :stock`,
+	[current_stock],
+	);
+	
+	res.json(result.rows);
+});
+
+/**
+Returns the volatility of each stock in descending order.
+*/
+router.get('/stdev', async function(req, res) {
+
+	var connection = await oracledb.getConnection(dbconfig);
+	const result = await connection.execute(
+  	`SELECT s.STOCK_NAME, STDDEV(PRICE) as volatility
+  		FROM PRICES p JOIN STOCKS s on p.stock_id = s.stock_id
+		WHERE p.DAILY_DATE > sysdate - 1800
+		GROUP BY s.STOCK_NAME
+		ORDER BY volatility DESC`,
+	);
+	
+	res.json(result.rows);
+});
+
+/**
+Returns the max price of each stock.
+*/
+router.get('/max_price', async function(req, res) {
+
+	var connection = await oracledb.getConnection(dbconfig);
+	const result = await connection.execute(
+  	`SELECT s.STOCK_NAME, MAX(p.PRICE) as max_price
+FROM PRICES p JOIN STOCKS s 
+ON p.STOCK_ID = s.STOCK_ID
+GROUP BY s.STOCK_NAME`,
+	);
+	
+	res.json(result.rows);
+});
+
+/**
+Returns all stocks less than a certain price on a specific day.
+*/
+router.get('/price_max/:price', async function(req, res) {
+
+	var max_price = req.params.price;
+
+	var connection = await oracledb.getConnection(dbconfig);
+	const result = await connection.execute(
+  	`SELECT STOCK_NAME, PRICE FROM PRICES P JOIN STOCKS S
+ON P.STOCK_ID = S.STOCK_ID
+WHERE P.DAILY_DATE = date '2019-10-10' 
+AND P.PRICE < :price`,
+[max_price]
+	);
+	
+	res.json(result.rows);
 });
 
 
