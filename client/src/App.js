@@ -8,6 +8,7 @@ import { Line } from 'react-chartjs-2';
 import LineGraph from './LineGraphs.js';
 import StockTable from './StockTable.js';
 import StockPrice from './StockPrices.js';
+import VolatileStockTable from './VolatileStocks.js'
 
 
 const { TabPane } = Tabs;
@@ -32,6 +33,9 @@ function App() {
         </TabPane>
         <TabPane tab="Analyze Stock Data" key="3">
           <LineGraph/>
+        </TabPane>
+        <TabPane tab="Find Most Volatile Stocks" key="4">
+          <VolatileStockTable/>
         </TabPane>
       </Tabs>
     </div>

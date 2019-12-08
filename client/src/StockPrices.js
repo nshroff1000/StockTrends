@@ -3,6 +3,7 @@ import { Select, Dropdown, Table, Divider, Tag } from 'antd';
 import { Tabs } from 'antd';
 import './App.css';
 import 'antd/dist/antd.css';
+import moment from 'moment';
 const { Option } = Select;
 
 export default class StockPrice extends React.Component {
@@ -23,12 +24,15 @@ export default class StockPrice extends React.Component {
       {
         title: "Stock Price",
         key: 'PRICE',
-        dataIndex: 'PRICE'
+        dataIndex: 'PRICE',
+        sorter: (a, b) => a.PRICE - b.PRICE
       },
       {
         title: "Stock Date",
         key: 'DAILY_DATE',
-        dataIndex: 'DAILY_DATE'
+        dataIndex: 'DAILY_DATE',
+        defaultSortOrder: 'ascend',
+        sorter: (a, b) => new Date(a.DAILY_DATE) - new Date(b.DAILY_DATE)
       }
     ];
   }
@@ -46,7 +50,7 @@ export default class StockPrice extends React.Component {
   }
 
   generatePricesTable(value) {
-    fetch("http://localhost:3001/daily_price/" + value)
+    fetch("http://localhost:3001/daily_price_all/" + value)
     .then(response => response.json())
     .then(data => {
       for (var i = 0; i < data.length; i++) {

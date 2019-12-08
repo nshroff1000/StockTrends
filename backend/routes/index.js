@@ -65,8 +65,32 @@ FROM STOCKS s
 	res.json(result.rows);
 });
 
+
 /**
-Gets all the daily prices for the given stock ticker.
+Gets all the daily prices for the given stock ticker only after the first trend value.
+*/
+router.get('/daily_price_all/:stock', async function(req, res) {
+
+	var current_stock = req.params.stock;
+
+	var connection = await oracledb.getConnection(dbconfig);
+	const result = await connection.execute(
+  	`SELECT STOCK_NAME, PRICE, DAILY_DATE
+FROM STOCKS s 
+    JOIN PRICES p ON s.stock_id = p.stock_id
+WHERE STOCK_TICKER = :stock
+	ORDER BY DAILY_DATE`,
+	[current_stock],
+	);
+	
+	res.json(result.rows);
+});
+
+
+
+
+/**
+Gets all the daily prices for the given stock ticker only after the first trend value.
 */
 router.get('/daily_price/:stock', async function(req, res) {
 
@@ -88,17 +112,19 @@ WHERE STOCK_TICKER = :stock AND p.DAILY_DATE > TO_DATE('16-NOV-14','dd-MON-yy')
 /**
 Returns the volatility of each stock in descending order.
 */
-router.get('/stdev', async function(req, res) {
+router.get('/stdev/:days', async function(req, res) {
+	
+	var number_of_days = req.params.days;
 
 	var connection = await oracledb.getConnection(dbconfig);
 	const result = await connection.execute(
   	`SELECT s.STOCK_NAME, STDDEV(PRICE) as volatility
   		FROM PRICES p JOIN STOCKS s on p.stock_id = s.stock_id
-		WHERE p.DAILY_DATE > TO_DATE('08-NOV-19','dd-MON-yy') - 2
+		WHERE p.DAILY_DATE > TO_DATE('08-NOV-19','dd-MON-yy') - :days
 		GROUP BY s.STOCK_NAME
 		ORDER BY volatility DESC`,
+		[number_of_days]
 	);
-	
 	res.json(result.rows);
 });
 
