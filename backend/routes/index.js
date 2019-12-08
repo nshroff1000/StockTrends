@@ -54,11 +54,11 @@ router.get('/daily_trends/:stock', async function(req, res) {
 
 	var connection = await oracledb.getConnection(dbconfig);
 	const result = await connection.execute(
-  	`SELECT STOCK_NAME, TREND_VALUE, DAILY_DATE
+  	`SELECT STOCK_NAME, TREND_VALUE, START_OF_WEEK
 FROM STOCKS s 
     JOIN TRENDS t ON s.stock_id = t.stock_id 
-    JOIN PRICES p ON s.stock_id = p.stock_id
-WHERE STOCK_TICKER = :stock AND p.DAILY_DATE > TO_DATE('08-NOV-19','dd-MON-yy') - 50`,
+	WHERE STOCK_TICKER = :stock
+	ORDER BY START_OF_WEEK`,
 	[current_stock],
 	);
 	
@@ -77,7 +77,8 @@ router.get('/daily_price/:stock', async function(req, res) {
   	`SELECT STOCK_NAME, PRICE, DAILY_DATE
 FROM STOCKS s 
     JOIN PRICES p ON s.stock_id = p.stock_id
-WHERE STOCK_TICKER = :stock`,
+WHERE STOCK_TICKER = :stock AND p.DAILY_DATE > TO_DATE('16-NOV-14','dd-MON-yy')
+	ORDER BY DAILY_DATE`,
 	[current_stock],
 	);
 	
