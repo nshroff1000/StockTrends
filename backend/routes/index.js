@@ -58,7 +58,7 @@ router.get('/daily_trends/:stock', async function(req, res) {
 FROM STOCKS s 
     JOIN TRENDS t ON s.stock_id = t.stock_id 
     JOIN PRICES p ON s.stock_id = p.stock_id
-WHERE STOCK_TICKER = :stock AND p.DAILY_DATE > sysdate - 50`,
+WHERE STOCK_TICKER = :stock AND p.DAILY_DATE > TO_DATE('08-NOV-19','dd-MON-yy') - 50`,
 	[current_stock],
 	);
 	
@@ -93,7 +93,7 @@ router.get('/stdev', async function(req, res) {
 	const result = await connection.execute(
   	`SELECT s.STOCK_NAME, STDDEV(PRICE) as volatility
   		FROM PRICES p JOIN STOCKS s on p.stock_id = s.stock_id
-		WHERE p.DAILY_DATE > sysdate - 1800
+		WHERE p.DAILY_DATE > TO_DATE('08-NOV-19','dd-MON-yy') - 2
 		GROUP BY s.STOCK_NAME
 		ORDER BY volatility DESC`,
 	);
