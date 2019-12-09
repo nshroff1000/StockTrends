@@ -42,7 +42,7 @@ export default class LineGraph extends React.Component {
       }
 
       var datasets_info = {
-        label: 'Trends Values',
+        label: 'Search Trend Values',
         fill: false,
         lineTension: 0.05,
         borderColor: 'rgba(185,72,100,1)',
@@ -179,7 +179,7 @@ export default class LineGraph extends React.Component {
               yAxes: [{
                 scaleLabel: {
                   display: true,
-                  labelString: 'Trend Value'
+                  labelString: 'Search Trend Value'
                 }
               }],
               xAxes: [{
@@ -191,7 +191,7 @@ export default class LineGraph extends React.Component {
             },
             title: {
               display: true,
-              text: "Weekly Trend Data"
+              text: "Weekly Search Trend Data"
             }     
           }}
           data={this.state.trend_data} 
@@ -324,7 +324,7 @@ export default class LineGraph extends React.Component {
     datasets_info_one['data'] = new_vol_data;
 
     var datasets_info_two = {
-      label: 'Trends Value',
+      label: 'Search Trend Value',
       fill: false,
       lineTension: 0.05,
       borderColor: 'rgba(185,72,100,1)',
@@ -362,7 +362,7 @@ export default class LineGraph extends React.Component {
             },
             title: {
               display: true,
-              text: "Comparing Z-scores of Weekly Volatility and Trend Data Over Time"
+              text: "Comparing Z-scores of Weekly Volatility and Search Trend Data Over Time"
             }           
           }}
           data={fin_dict} 
@@ -440,7 +440,7 @@ export default class LineGraph extends React.Component {
     datasets_info_one['data'] = new_volume_data;
 
     var datasets_info_two = {
-      label: 'Trend Values',
+      label: 'Search Trend Values',
       fill: false,
       lineTension: 0.05,
       borderColor: 'rgba(185,72,100,1)',
@@ -478,7 +478,7 @@ export default class LineGraph extends React.Component {
             },
             title: {
               display: true,
-              text: "Comparing Z-scores of Weekly Average Volume and Trend Data Over Time"
+              text: "Comparing Z-scores of Weekly Average Volume and Search Trend Data Over Time"
             }           
           }}
           data={fin_dict} 
@@ -491,7 +491,7 @@ export default class LineGraph extends React.Component {
       return "";
     } else {
       return <div>
-
+      <div align="center">
       <Select 
         showSearch
         placeholder="Select a stock" 
@@ -502,7 +502,7 @@ export default class LineGraph extends React.Component {
         onChange={this.handleChange.bind(this)}>
           {this.state.dropdown_data}
       </Select>
-
+      </div>
       <div style={{height: 300}}>
       {this.state.price_data == null || this.state.trend_data == null ? "" : this.renderPriceLine()}
       </div>

@@ -49,7 +49,9 @@ export default class VolatileStockTable extends React.Component {
 
   render() {
       return <div>
+      <div align="center">
       <Input style={{ width: 300 }}  onChange = {this.handleChange.bind(this)} placeholder="Enter range of days to see volatility for" />
+      </div>
       {this.state.table_data == null ? "" : this.renderPriceTable()}
       </div>
   }

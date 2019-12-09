@@ -203,7 +203,7 @@ export default class MiscellaneousInfo extends React.Component {
   }
 
   getRangePicker() {
-    return (<RangePicker defaultValue={[this.state.startDate, this.state.endDate]} onChange={this.handlePicker.bind(this)}/>);
+    return (<div align="center">Pick dates to see the maximum and minimum stock price for a certain range <br/><br/> <RangePicker defaultValue={[this.state.startDate, this.state.endDate]} onChange={this.handlePicker.bind(this)}/></div>);
   }
 
   render() {
@@ -211,7 +211,7 @@ export default class MiscellaneousInfo extends React.Component {
       return "";
     } else {
       return <div>
-
+      <div align="center">
       <Select 
         showSearch
         placeholder="Select a stock" 
@@ -222,7 +222,7 @@ export default class MiscellaneousInfo extends React.Component {
         onChange={this.handleChange.bind(this)}>
           {this.state.dropdown_data}
       </Select>
-
+      </div>
 
       <br/>
       <br/>

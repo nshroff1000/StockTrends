@@ -75,17 +75,18 @@ export default class StockPrice extends React.Component {
       return "";
     } else {
       return <div>
-
+      <div align="center">
       <Select 
         showSearch
         placeholder="Select a stock" 
-        style={{ width: 300 }} 
+        style={{ width: 300}} 
         filterOption={(input, option) =>
           option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
         }
         onChange={this.handleChange.bind(this)}>
           {this.state.dropdown_data}
       </Select>
+      </div>
       {this.state.table_data == null ? "" : this.renderPriceTable()}
       </div>
     }
