@@ -181,24 +181,6 @@ GROUP BY s.STOCK_NAME`,
 	res.json(result.rows);
 });
 
-/**
-Returns all stocks less than a certain price on a specific day.
-*/
-router.get('/price_max/:price', async function(req, res) {
-
-	var max_price = req.params.price;
-
-	var connection = await oracledb.getConnection(dbconfig);
-	const result = await connection.execute(
-  	`SELECT STOCK_NAME, PRICE FROM PRICES P JOIN STOCKS S
-ON P.STOCK_ID = S.STOCK_ID
-WHERE P.DAILY_DATE = date '2019-10-10' 
-AND P.PRICE < :price`,
-[max_price]
-	);
-	
-	res.json(result.rows);
-});
 
 
 module.exports = router

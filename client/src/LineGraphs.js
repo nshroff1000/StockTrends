@@ -495,7 +495,7 @@ export default class LineGraph extends React.Component {
       <Select 
         showSearch
         placeholder="Select a stock" 
-        style={{ width: 300 }} 
+        style={{ width: 300}} 
         filterOption={(input, option) =>
           option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
         }
