@@ -114,7 +114,6 @@ export default class StockPrice extends React.Component {
         onChange={this.handleChange.bind(this)}>
           {this.state.dropdown_data}
       </Select>
-            <br/>
       <br/>
       <br/>
       <div>
