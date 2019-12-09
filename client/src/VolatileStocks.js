@@ -35,6 +35,9 @@ export default class VolatileStockTable extends React.Component {
     fetch(URL + "/stdev/" + value)
     .then(response => response.json())
     .then(data => {
+      for (var i = 0; i < data.length; i++) {
+        data[i]['VOLATILITY'] = Math.round(data[i]['VOLATILITY']*1000)/1000;
+      }
       this.setState({table_data: data});
     });
   }

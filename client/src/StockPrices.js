@@ -57,6 +57,7 @@ export default class StockPrice extends React.Component {
       for (var i = 0; i < data.length; i++) {
         var split_data = data[i]['DAILY_DATE'].split("T");
         data[i]['DAILY_DATE'] = split_data[0];
+        data[i]['PRICE'] = Math.round(data[i]['PRICE']*100)/100;
       }
 
       this.setState({table_data: data});

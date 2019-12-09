@@ -122,7 +122,9 @@ export default class MiscellaneousInfo extends React.Component {
     var covariance = fin_sum/trend_data.length;
     var correlation = covariance/(std(formatted_vol_data)*std(trend_data));
 
-    return <Descriptions.Item label="Correlation Between Volatility and Search Trends">{correlation}</Descriptions.Item>
+    var rounded = Math.round(correlation * 1000)/1000
+
+    return <Descriptions.Item label="Correlation Between Volatility and Search Trends">{rounded}</Descriptions.Item>
   }
 
   calculateCorrelationVolume() {
@@ -165,7 +167,9 @@ export default class MiscellaneousInfo extends React.Component {
     var covariance = fin_sum/trend_data.length;
     var correlation = covariance/(std(formatted_vol_data)*std(trend_data));
 
-    return <Descriptions.Item label="Correlation Between Volume and Search Trends">{correlation}</Descriptions.Item>
+    var rounded = Math.round(correlation * 1000)/1000
+
+    return <Descriptions.Item label="Correlation Between Volume and Search Trends">{rounded}</Descriptions.Item>
   }
 
   handlePicker(value) {
