@@ -17,7 +17,8 @@ export default class LineGraph extends React.Component {
       dropdown_options: null,
       trend_data: null,
       price_data: null,
-      volatility_data: null
+      volatility_data: null,
+      volume_data: null
     }
   }
 
@@ -25,6 +26,7 @@ export default class LineGraph extends React.Component {
     this.generateTrendLine(value);
     this.generatePricesLine(value);
     this.generateVolatilityLine(value);
+    this.generateVolumeLine(value);
   }
 
   generateTrendLine(value) {
@@ -120,6 +122,39 @@ export default class LineGraph extends React.Component {
       new_dict['datasets'] = [datasets_info];
       new_dict['labels'] = x_array;
       this.setState({volatility_data: new_dict});
+    })
+  }
+
+  generateVolumeLine(value) {
+    fetch("http://localhost:3001/weekly_volume/" + value)
+    .then(response => response.json())
+    .then(data => {
+      var x_array = [];
+      var y_array = [];
+      for (var i = 0; i < data.length; i++) {
+        y_array.push(data[i]['AVG_VOLUME']);
+        var temp = data[i]['DAILY_DATE'].split("T");
+        x_array.push(temp[0]);
+      }
+
+      var datasets_info = {
+        label: 'Daily Volume',
+        fill: false,
+        lineTension: 0.05,
+        borderColor: 'rgba(75,192,192,1)',
+        borderDashOffset: 0.0,
+        pointBorderColor: 'rgba(75,192,192,1)',
+        pointBorderWidth: 1,
+        pointHoverBackgroundColor: 'rgba(75,192,192,1)',
+        pointHoverBorderColor: 'rgba(220,220,220,1)',
+        pointHoverBorderWidth: 2,
+      }
+      datasets_info['data'] = y_array;
+      var new_dict = {}
+      new_dict['datasets'] = [datasets_info];
+      new_dict['labels'] = x_array;
+      console.log(new_dict);
+      this.setState({volume_data: new_dict});
     })
   }
 
@@ -223,7 +258,6 @@ export default class LineGraph extends React.Component {
     var fin_dict = {}
     var trend_info = this.state.trend_data;
     var volatility_info = this.state.volatility_data;
-    console.log(trend_info);
 
     var new_datasets = [];
     fin_dict['labels'] = trend_info['labels'];
@@ -276,7 +310,7 @@ export default class LineGraph extends React.Component {
     }
 
     var datasets_info_one = {
-        label: 'Standard Deviation over 5 days',
+        label: 'Volatility',
         fill: false,
         lineTension: 0.05,
         borderColor: 'rgba(75,192,192,1)',
@@ -290,7 +324,7 @@ export default class LineGraph extends React.Component {
     datasets_info_one['data'] = new_vol_data;
 
     var datasets_info_two = {
-      label: 'Trends Values',
+      label: 'Trends Value',
       fill: false,
       lineTension: 0.05,
       borderColor: 'rgba(185,72,100,1)',
@@ -307,8 +341,6 @@ export default class LineGraph extends React.Component {
     new_datasets.push(datasets_info_two);
 
     fin_dict['datasets'] = new_datasets;
-
-    console.log(fin_dict);
 
     return  (<Line 
           height={300}
@@ -338,6 +370,122 @@ export default class LineGraph extends React.Component {
   }
 
 
+  renderVolumeOverLayLine() {
+    var fin_dict = {}
+    var trend_info = this.state.trend_data;
+    var volume_info = this.state.volume_data;
+
+    var new_datasets = [];
+    fin_dict['labels'] = trend_info['labels'];
+    
+    var old_trend_data = trend_info['datasets'][0]['data'];
+    var old_volume_data = volume_info['datasets'][0]['data'];
+    var formatted_volume_data = [];
+
+    var date_labels = [];
+    var temp = -1;
+    for (var i = 0; i < volume_info['labels'].length; i++) {
+      var d = new Date(volume_info['labels'][i] + " 00:00");
+      var n = d.getDay();
+
+      if (n == 4) {
+        temp = i;
+      }
+
+      if (n == 5) {
+        date_labels.push(i);
+        temp = -1;
+      }
+
+      if (n == 1 && temp != -1) {
+        date_labels.push(temp);
+        temp = -1;
+      }
+    }
+    for (var i = 0; i < date_labels.length; i++) {
+      formatted_volume_data.push(old_volume_data[date_labels[i]]);
+    }
+
+
+    var mean_volume = mean(formatted_volume_data);
+    var mean_trend = mean(old_trend_data);
+    var std_volume = std(formatted_volume_data);
+    var std_trend = std(old_trend_data);
+
+    var new_volume_data = [];
+    var new_trend_data = [];
+
+    for (var i = 0; i < old_trend_data.length; i++) {
+      var z_score = (old_trend_data[i] - mean_trend)/std_trend
+      new_trend_data.push(z_score);
+    }
+
+    for (var i = 0; i < formatted_volume_data.length; i++) {
+      var z_score = (formatted_volume_data[i] - mean_volume)/std_volume
+      new_volume_data.push(z_score);
+    }
+
+    var datasets_info_one = {
+        label: 'Average Volume',
+        fill: false,
+        lineTension: 0.05,
+        borderColor: 'rgba(75,192,192,1)',
+        borderDashOffset: 0.0,
+        pointBorderColor: 'rgba(75,192,192,1)',
+        pointBorderWidth: 1,
+        pointHoverBackgroundColor: 'rgba(75,192,192,1)',
+        pointHoverBorderColor: 'rgba(220,220,220,1)',
+        pointHoverBorderWidth: 2,
+    }
+    datasets_info_one['data'] = new_volume_data;
+
+    var datasets_info_two = {
+      label: 'Trend Values',
+      fill: false,
+      lineTension: 0.05,
+      borderColor: 'rgba(185,72,100,1)',
+      borderDashOffset: 0.0,
+      pointBorderColor: 'rgba(75,192,192,1)',
+      pointBorderWidth: 1,
+      pointHoverBackgroundColor: 'rgba(75,192,192,1)',
+      pointHoverBorderColor: 'rgba(220,220,220,1)',
+      pointHoverBorderWidth: 2,
+    }
+    datasets_info_two['data'] = new_trend_data;
+
+    new_datasets.push(datasets_info_one);
+    new_datasets.push(datasets_info_two);
+
+    fin_dict['datasets'] = new_datasets;
+
+    return  (<Line 
+          height={300}
+          options = {{
+            maintainAspectRatio: false,
+            scales: {
+              yAxes: [{
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Relative Z-score'
+                }
+              }],
+              xAxes: [{
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Week'
+                }
+              }],
+            },
+            title: {
+              display: true,
+              text: "Comparing Z-scores of Weekly Average Volume and Trend Data Over Time"
+            }           
+          }}
+          data={fin_dict} 
+          />) 
+  }  
+
+
   render() {
     if (this.state.dropdown_data == null) {
       return "";
@@ -363,11 +511,16 @@ export default class LineGraph extends React.Component {
       {this.state.trend_data == null || this.state.price_data == null ? "" : this.renderTrendLine()}
       </div>
       <br/>
+      {/*
       <div style={{height: 300}}>
       {this.state.volatility_data == null || this.state.trend_data == null || this.state.price_data == null ? "" : this.renderVolatilityLine()}
       </div>
+      */}
       <div style={{height: 300}}>
       {this.state.volatility_data == null || this.state.trend_data == null ? "" : this.renderOverLayLine()}
+      </div>
+      <div style={{height: 300}}>
+      {this.state.volume_data == null || this.state.trend_data == null ? "" : this.renderVolumeOverLayLine()}
       </div>
 
 

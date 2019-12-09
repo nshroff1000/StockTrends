@@ -88,21 +88,19 @@ WHERE STOCK_TICKER = :stock
 
 
 /**
-Gets all the daily volume for the given stock ticker only after the first trend value.
+Gets the volume of a particular stock over the last 5 days for each date.
 */
-router.get('/daily_volume/:stock', async function(req, res) {
+router.get('/weekly_volume/:stock', async function(req, res) {
 	var current_stock = req.params.stock;
 
 	var connection = await oracledb.getConnection(dbconfig);
 	const result = await connection.execute(
-  	`SELECT STOCK_NAME, VOLUME, DAILY_DATE
-FROM STOCKS s 
-    JOIN PRICES p ON s.stock_id = p.stock_id
-WHERE STOCK_TICKER = :stock AND p.DAILY_DATE > TO_DATE('16-NOV-14','dd-MON-yy')
-	ORDER BY DAILY_DATE`,
-	[current_stock],
+  	`SELECT DAILY_DATE,
+       AVG(VOLUME) OVER (ORDER BY DAILY_DATE ASC ROWS 5 PRECEDING) AS AVG_VOLUME
+		FROM PRICES p JOIN STOCKS s ON p.STOCK_ID = s.STOCK_ID WHERE STOCK_TICKER = :stock 
+		AND DAILY_DATE >= TO_DATE('16-NOV-14','dd-MON-yy')`,
+		[current_stock]
 	);
-	
 	res.json(result.rows);
 });
 
