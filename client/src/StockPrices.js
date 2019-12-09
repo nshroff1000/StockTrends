@@ -1,6 +1,6 @@
 import React from 'react';
 import { Select, Dropdown, Table, Divider, Tag } from 'antd';
-import { Tabs } from 'antd';
+import { Input, Tabs } from 'antd';
 import './App.css';
 import 'antd/dist/antd.css';
 import URL from './constants.js'
@@ -13,7 +13,8 @@ export default class StockPrice extends React.Component {
     super(props);
     this.state = {
       dropdown_options: null,
-      table_data: null
+      table_data: null,
+      original_data: null
     }
 
     this.columns = [
@@ -59,8 +60,7 @@ export default class StockPrice extends React.Component {
         data[i]['DAILY_DATE'] = split_data[0];
         data[i]['PRICE'] = Math.round(data[i]['PRICE']*100)/100;
       }
-
-      this.setState({table_data: data});
+      this.setState({original_data: data, table_data: data});
     })
   }
 
@@ -68,8 +68,34 @@ export default class StockPrice extends React.Component {
     this.generatePricesTable(value);
   }
 
+  editPricesTable(value) {
+    var new_table_data = [];
+    this.state.original_data.forEach(entry => {
+      if (entry['DAILY_DATE'].indexOf(value) !== -1) {
+        new_table_data.push(entry);
+      }
+    })
+    this.setState({table_data: new_table_data})
+  }
+
+  handleChangeInput(event) {
+    if(event.target.value != "")
+      this.editPricesTable(event.target.value);
+    else
+      this.setState({table_data: this.state.original_data});
+  }
+
   renderPriceTable() {
-    return <Table rowKey="STOCK_ID" dataSource={this.state.table_data} columns={this.columns}/>
+    return (<div>
+    <Table rowKey="STOCK_ID" dataSource={this.state.table_data} columns={this.columns}/>
+    </div>)
+  }
+
+  renderInput() {
+    return (<div> 
+    Filter Table by Date  &nbsp; 
+    <Input style={{ width: 300 }} onChange = {this.handleChangeInput.bind(this)} placeholder="Enter a date to search by date" />
+    </div>)
   }
 
   render() {
@@ -88,6 +114,12 @@ export default class StockPrice extends React.Component {
         onChange={this.handleChange.bind(this)}>
           {this.state.dropdown_data}
       </Select>
+            <br/>
+      <br/>
+      <br/>
+      <div>
+      {this.state.table_data == null ? "" : this.renderInput()}
+      </div>
       </div>
       {this.state.table_data == null ? "" : this.renderPriceTable()}
       </div>
