@@ -9,7 +9,7 @@ import LineGraph from './LineGraphs.js';
 import StockTable from './StockTable.js';
 import StockPrice from './StockPrices.js';
 import VolatileStockTable from './VolatileStocks.js'
-
+import MiscellaneousInfo from './MiscellaneousInfo.js'
 
 const { TabPane } = Tabs;
 const { Option } = Select;
@@ -36,6 +36,9 @@ function App() {
         </TabPane>
         <TabPane tab="Find Most Volatile Stocks" key="4">
           <VolatileStockTable/>
+        </TabPane>
+        <TabPane tab="Miscellaneous Stock Information" key="5">
+          <MiscellaneousInfo/>
         </TabPane>
       </Tabs>
     </div>

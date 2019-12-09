@@ -29,21 +29,21 @@ router.get('/stocks', async function(req, res) {
 	res.json(result.rows);
 });
 
-/**
-Returns the stock info for a particular stock
-*/
-router.get('/stocks/:stock', async function(req, res) {
-	var current_stock = req.params.stock;
+// /**
+// Returns the stock info for a particular stock
+// */
+// router.get('/stocks/:stock', async function(req, res) {
+// 	var current_stock = req.params.stock;
 
-	var connection = await oracledb.getConnection(dbconfig);
-	const result = await connection.execute(
-  	`SELECT STOCK_NAME, STOCK_TICKER, STOCK_ID
-   	FROM STOCKS WHERE STOCK_TICKER = :tick ORDER BY STOCK_ID`,
-   	[current_stock],
-	);
+// 	var connection = await oracledb.getConnection(dbconfig);
+// 	const result = await connection.execute(
+//   	`SELECT STOCK_NAME, STOCK_TICKER, STOCK_ID
+//    	FROM STOCKS WHERE STOCK_TICKER = :tick ORDER BY STOCK_ID`,
+//    	[current_stock],
+// 	);
 	
-	res.json(result.rows);
-});
+// 	res.json(result.rows);
+// });
 
 /**
 Gets all the daily trend values for the given stock ticker.
@@ -166,16 +166,54 @@ router.get('/stdev_week/:stock', async function(req, res) {
 });
 
 /**
-Returns the max price of each stock.
+Returns the max price of each stock in a certain range of dates.
 */
-router.get('/max_price', async function(req, res) {
+router.get('/max_price/:stock?', async function(req, res) {
+	var current_stock = req.params.stock;
+	var dateOne = req.query['first_date'];
+	var dateTwo = req.query['second_date'];
 
 	var connection = await oracledb.getConnection(dbconfig);
 	const result = await connection.execute(
-  	`SELECT s.STOCK_NAME, MAX(p.PRICE) as max_price
-FROM PRICES p JOIN STOCKS s 
-ON p.STOCK_ID = s.STOCK_ID
-GROUP BY s.STOCK_NAME`,
+  	`SELECT STOCK_NAME, PRICE AS MAX_PRICE FROM 
+  	(SELECT s.STOCK_NAME, p.PRICE
+	FROM PRICES p JOIN STOCKS s 
+	ON p.STOCK_ID = s.STOCK_ID
+	WHERE s.STOCK_TICKER = :stock 
+	AND p.DAILY_DATE BETWEEN 
+	TO_DATE(:dateOne, 'MM/DD/YYYY') AND
+	TO_DATE(:dateTwo, 'MM/DD/YYYY')
+	ORDER BY p.PRICE DESC)
+	WHERE rownum = 1
+	`,
+	[current_stock, dateOne, dateTwo]
+	);
+	
+	res.json(result.rows);
+});
+
+/**
+Returns the min price of each stock in a certain range of dates.
+*/
+router.get('/min_price/:stock?', async function(req, res) {
+	var current_stock = req.params.stock;
+	var dateOne = req.query['first_date'];
+	var dateTwo = req.query['second_date'];
+
+	var connection = await oracledb.getConnection(dbconfig);
+	const result = await connection.execute(
+  	`SELECT STOCK_NAME, PRICE AS MIN_PRICE FROM 
+  	(SELECT s.STOCK_NAME, p.PRICE
+	FROM PRICES p JOIN STOCKS s 
+	ON p.STOCK_ID = s.STOCK_ID
+	WHERE s.STOCK_TICKER = :stock 
+	AND p.DAILY_DATE BETWEEN 
+	TO_DATE(:dateOne, 'MM/DD/YYYY') AND
+	TO_DATE(:dateTwo, 'MM/DD/YYYY')
+	ORDER BY p.PRICE ASC)
+	WHERE rownum = 1
+	`,
+	[current_stock, dateOne, dateTwo]
 	);
 	
 	res.json(result.rows);
