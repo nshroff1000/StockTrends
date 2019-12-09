@@ -92,8 +92,8 @@ export default class StockPrice extends React.Component {
   }
 
   renderInput() {
-    return (<div> 
-    Filter Table by Date  &nbsp; 
+    return (<div>
+    Filter Table by Date  &nbsp;
     <Input style={{ width: 300 }} onChange = {this.handleChangeInput.bind(this)} placeholder="Enter a date to search by date" />
     </div>)
   }
@@ -104,10 +104,10 @@ export default class StockPrice extends React.Component {
     } else {
       return <div>
       <div align="center">
-      <Select 
+      <Select
         showSearch
-        placeholder="Select a stock" 
-        style={{ width: 300}} 
+        placeholder="Select a stock"
+        style={{ width: 300}}
         filterOption={(input, option) =>
           option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
         }
@@ -119,6 +119,8 @@ export default class StockPrice extends React.Component {
       <div>
       {this.state.table_data == null ? "" : this.renderInput()}
       </div>
+      <br/>
+      <br/>
       </div>
       {this.state.table_data == null ? "" : this.renderPriceTable()}
       </div>

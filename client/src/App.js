@@ -13,7 +13,7 @@ import MiscellaneousInfo from './MiscellaneousInfo.js'
 
 const { TabPane } = Tabs;
 const { Option } = Select;
- 
+
 
 function Title(props) {
   return <h1>Finding Stock Trends</h1>;
@@ -27,25 +27,49 @@ function App() {
       <Tabs tabBarStyle={{textAlign: 'center'}} defaultActiveKey="1">
         <TabPane tab="Home Page" key="1">
         <div style={{"padding-left": "40px", "padding-right": "40px"}}>
-<div align="center"> <h3> Welcome to BeatTheStreet! <br/>  
-Our mission is to help retail investors access the same kind of analysis and information that large hedge funds use.* </h3></div> 
+<br/>
+<br/>
+<br/>
+<div align="center"> <h3 style={{"font-size":"40px", "font-family":"Garamond"}}> Welcome to BeatTheStreet! </h3> <br/>
 
-<h4>Page Descriptions: </h4>
+<h3 style={{"font-size":"25px", "font-family":"Garamond"}}> Our mission is to help retail investors access the same kind of analysis and information that large hedge funds use.* </h3></div>
+ <br/>
+  <br/>
+<h4><u>Page Descriptions: </u></h4>
+<ol>
+
+<li>
 <h5>
-All Stocks: A list of all stocks in the S&P 500 and their respective ticker symbol 
+All Stocks: A list of all stocks in the S&P 500 and their respective ticker symbol
 </h5>
+</li>
+
+<li>
 <h5>
 Stock Prices: A table that includes historical stock price data for every company in the S&P 500
 </h5>
+</li>
+
+<li>
 <h5>
-Analyze Stock Data: This page allows individuals to compare price, stock volatility (measured as standard deviation), and trading volume to google search trend data. Some stocks are always in the news; the question is, does this attention actually lead to better performance? 
+Analyze Stock Data: This page allows individuals to compare price, stock volatility (measured as standard deviation), and trading volume to google search trend data. Some stocks are always in the news; the question is, does this attention actually lead to better performance?
 </h5>
+</li>
+
+<li>
 <h5>
-Most Volatile Stocks: This page allows you to see the most volatile stock over the last specified number of days.  
+Most Volatile Stocks: This page allows you to see the most volatile stock over the last specified number of days.
 </h5>
+</li>
+
+<li>
 <h5>
-Miscellaneous Information: This page displays three things: 1) The correlation between volatility and google search trends; 2) The correlation between trading volume and google search trends; 3) The ability to see the maximum and minimum price of a stock over a given time period. 
+Miscellaneous Information: This page displays three things: 1) The correlation between volatility and google search trends; 2) The correlation between trading volume and google search trends; 3) The ability to see the maximum and minimum price of a stock over a given time period.
 </h5>
+</li>
+
+</ol>
+
 <br/>
 <br/>
 *Stock Market Data Updated On 11/08/2019
