@@ -67,7 +67,7 @@ FROM STOCKS s
 
 
 /**
-Gets all the daily prices for the given stock ticker only after the first trend value.
+Gets all the daily prices for the given stock ticker.
 */
 router.get('/daily_price_all/:stock', async function(req, res) {
 
@@ -79,6 +79,26 @@ router.get('/daily_price_all/:stock', async function(req, res) {
 FROM STOCKS s 
     JOIN PRICES p ON s.stock_id = p.stock_id
 WHERE STOCK_TICKER = :stock
+	ORDER BY DAILY_DATE`,
+	[current_stock],
+	);
+	
+	res.json(result.rows);
+});
+
+
+/**
+Gets all the daily volume for the given stock ticker only after the first trend value.
+*/
+router.get('/daily_volume/:stock', async function(req, res) {
+	var current_stock = req.params.stock;
+
+	var connection = await oracledb.getConnection(dbconfig);
+	const result = await connection.execute(
+  	`SELECT STOCK_NAME, VOLUME, DAILY_DATE
+FROM STOCKS s 
+    JOIN PRICES p ON s.stock_id = p.stock_id
+WHERE STOCK_TICKER = :stock AND p.DAILY_DATE > TO_DATE('16-NOV-14','dd-MON-yy')
 	ORDER BY DAILY_DATE`,
 	[current_stock],
 	);
@@ -124,6 +144,25 @@ router.get('/stdev/:days', async function(req, res) {
 		GROUP BY s.STOCK_NAME
 		ORDER BY volatility DESC`,
 		[number_of_days]
+	);
+	res.json(result.rows);
+});
+
+
+/**
+Returns the volatility of a particular stock over the last 5 days for each date.
+*/
+router.get('/stdev_week/:stock', async function(req, res) {
+	
+	var current_stock = req.params.stock;
+
+	var connection = await oracledb.getConnection(dbconfig);
+	const result = await connection.execute(
+  	`SELECT DAILY_DATE,
+       STDDEV(PRICE) OVER (ORDER BY DAILY_DATE ASC ROWS 5 PRECEDING) AS STD_PRICE
+		FROM PRICES p JOIN STOCKS s ON p.STOCK_ID = s.STOCK_ID WHERE STOCK_TICKER = :stock 
+		AND DAILY_DATE >= TO_DATE('16-NOV-14','dd-MON-yy')`,
+		[current_stock]
 	);
 	res.json(result.rows);
 });
