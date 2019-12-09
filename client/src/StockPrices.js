@@ -14,7 +14,8 @@ export default class StockPrice extends React.Component {
     this.state = {
       dropdown_options: null,
       table_data: null,
-      original_data: null
+      original_data: null,
+      input_value: null
     }
 
     this.columns = [
@@ -65,6 +66,7 @@ export default class StockPrice extends React.Component {
   }
 
   handleChange(value) {
+    this.setState({input_value: null})
     this.generatePricesTable(value);
   }
 
@@ -79,6 +81,7 @@ export default class StockPrice extends React.Component {
   }
 
   handleChangeInput(event) {
+    this.setState({input_value: event.target.value})
     if(event.target.value != "")
       this.editPricesTable(event.target.value);
     else
@@ -94,7 +97,7 @@ export default class StockPrice extends React.Component {
   renderInput() {
     return (<div> 
     Filter Table by Date  &nbsp; 
-    <Input style={{ width: 300 }} onChange = {this.handleChangeInput.bind(this)} placeholder="Enter a date to search by date" />
+    <Input style={{ width: 300 }} value = {this.state.input_value} onChange = {this.handleChangeInput.bind(this)} placeholder="Enter a date to search by date" />
     </div>)
   }
 
