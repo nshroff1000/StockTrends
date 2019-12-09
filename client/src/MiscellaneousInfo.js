@@ -64,7 +64,7 @@ export default class MiscellaneousInfo extends React.Component {
     .then(data => {
       var volatility_values = [];
       for (var i = 0; i < data.length; i++) {
-        volatility_values.push({price: data[i]['STD_PRICE'], date: data[i]['DAILY_DATE']});
+        volatility_values.push({price: data[i]['STD_PRICE'], date: data[i]['DAILY_DATE'].split("T")[0]});
       }
       this.setState({volatility_data: volatility_values});
     })
@@ -76,7 +76,7 @@ export default class MiscellaneousInfo extends React.Component {
     .then(data => {
       var volume_values = [];
       for (var i = 0; i < data.length; i++) {
-        volume_values.push({volume: data[i]['AVG_VOLUME'], date: data[i]['DAILY_DATE']});
+        volume_values.push({volume: data[i]['AVG_VOLUME'], date: data[i]['DAILY_DATE'].split("T")[0]});
       }
       this.setState({volume_data: volume_values});
     })
@@ -91,7 +91,7 @@ export default class MiscellaneousInfo extends React.Component {
     var date_labels = [];
     var temp = -1;
     for (var i = 0; i < volatility_data.length; i++) {
-      var d = new Date(volatility_data[i]['date']);
+      var d = new Date(volatility_data[i]['date'] + " 00:00");
       var n = d.getDay();
 
       if (n == 4) {
@@ -108,7 +108,7 @@ export default class MiscellaneousInfo extends React.Component {
         temp = -1;
       }
     }
-
+    
     for (var i = 0; i < date_labels.length; i++) {
       formatted_vol_data.push(volatility_data[date_labels[i]]['price']);
     }
@@ -116,6 +116,7 @@ export default class MiscellaneousInfo extends React.Component {
     var fin_sum = 0;
     var mean_vol = mean(formatted_vol_data);
     var mean_trend = mean(trend_data);
+
     for (var i = 0; i < trend_data.length; i++) {
       fin_sum += ((formatted_vol_data[i] - mean_vol)*(trend_data[i] - mean_trend))
     }
@@ -136,7 +137,7 @@ export default class MiscellaneousInfo extends React.Component {
     var date_labels = [];
     var temp = -1;
     for (var i = 0; i < volume_data.length; i++) {
-      var d = new Date(volume_data[i]['date']);
+      var d = new Date(volume_data[i]['date'] + " 00:00");
       var n = d.getDay();
 
       if (n == 4) {
