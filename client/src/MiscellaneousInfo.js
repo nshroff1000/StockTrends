@@ -4,6 +4,7 @@ import { DatePicker, Tabs } from 'antd';
 import './App.css';
 import 'antd/dist/antd.css';
 import {std, mean, variance} from 'mathjs';
+import URL from './constants.js'
 
 const { MonthPicker, RangePicker, WeekPicker } = DatePicker;
 
@@ -27,7 +28,7 @@ export default class MiscellaneousInfo extends React.Component {
   }
 
   componentDidMount() {
-    fetch("http://localhost:3001/stocks")
+    fetch(URL + "/stocks")
     .then(response => response.json())
     .then(data => {
       var options = [];
@@ -46,7 +47,7 @@ export default class MiscellaneousInfo extends React.Component {
   }
 
   getTrendValues(value) {
-    fetch("http://localhost:3001/daily_trends/" + value)
+    fetch(URL + "/daily_trends/" + value)
     .then(response => response.json())
     .then(data => {
       var trend_values = [];
@@ -58,7 +59,7 @@ export default class MiscellaneousInfo extends React.Component {
   }
 
   getVolatilityValues(value) {
-    fetch("http://localhost:3001/stdev_week/" + value)
+    fetch(URL + "/stdev_week/" + value)
     .then(response => response.json())
     .then(data => {
       var volatility_values = [];
@@ -70,7 +71,7 @@ export default class MiscellaneousInfo extends React.Component {
   }
 
   getVolumeValues(value) {
-    fetch("http://localhost:3001/weekly_volume/" + value)
+    fetch(URL + "/weekly_volume/" + value)
     .then(response => response.json())
     .then(data => {
       var volume_values = [];
@@ -179,7 +180,7 @@ export default class MiscellaneousInfo extends React.Component {
 
 
   getMinPrice(dateOne, dateTwo) {
-    fetch("http://localhost:3001/min_price/" + this.state.chosen_stock + "?first_date=" + dateOne + "&second_date=" + dateTwo)
+    fetch(URL + "/min_price/" + this.state.chosen_stock + "?first_date=" + dateOne + "&second_date=" + dateTwo)
     .then(response => response.json())
     .then(data => {
       this.setState({min_price: data[0]['MIN_PRICE']});
@@ -188,7 +189,7 @@ export default class MiscellaneousInfo extends React.Component {
 
 
   getMaxPrice(dateOne, dateTwo) {
-    fetch("http://localhost:3001/max_price/" + this.state.chosen_stock + "?first_date=" + dateOne + "&second_date=" + dateTwo)
+    fetch(URL + "/max_price/" + this.state.chosen_stock + "?first_date=" + dateOne + "&second_date=" + dateTwo)
     .then(response => response.json())
     .then(data => {
       this.setState({max_price: data[0]['MAX_PRICE']});

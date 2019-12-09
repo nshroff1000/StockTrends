@@ -1,6 +1,7 @@
 import React from 'react';
 import { Select, Dropdown, Table, Divider, Tag } from 'antd';
 import { Tabs } from 'antd';
+import URL from './constants.js'
 import './App.css';
 import 'antd/dist/antd.css';
 export default class StockTable extends React.Component {
@@ -24,7 +25,7 @@ export default class StockTable extends React.Component {
   }
 
   componentDidMount() {
-    fetch("http://localhost:3001/stocks")
+    fetch(URL + "/stocks")
     .then(response => response.json())
     .then(data => {
       this.setState({table_data: data});

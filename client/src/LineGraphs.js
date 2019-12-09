@@ -2,6 +2,7 @@ import React from 'react';
 import { Select, Dropdown, Table, Divider, Tag } from 'antd';
 import { Tabs } from 'antd';
 import './App.css';
+import URL from './constants.js'
 import 'antd/dist/antd.css';
 import { Chart } from 'react-charts'
 import { Line } from 'react-chartjs-2';
@@ -30,7 +31,7 @@ export default class LineGraph extends React.Component {
   }
 
   generateTrendLine(value) {
-    fetch("http://localhost:3001/daily_trends/" + value)
+    fetch(URL + "/daily_trends/" + value)
     .then(response => response.json())
     .then(data => {
       var x_array = [];
@@ -62,7 +63,7 @@ export default class LineGraph extends React.Component {
   }
 
   generatePricesLine(value) {
-    fetch("http://localhost:3001/daily_price/" + value)
+    fetch(URL + "/daily_price/" + value)
     .then(response => response.json())
     .then(data => {
       var x_array = [];
@@ -94,7 +95,7 @@ export default class LineGraph extends React.Component {
   }
 
   generateVolatilityLine(value) {
-    fetch("http://localhost:3001/stdev_week/" + value)
+    fetch(URL + "/stdev_week/" + value)
     .then(response => response.json())
     .then(data => {
       var x_array = [];
@@ -126,7 +127,7 @@ export default class LineGraph extends React.Component {
   }
 
   generateVolumeLine(value) {
-    fetch("http://localhost:3001/weekly_volume/" + value)
+    fetch(URL + "/weekly_volume/" + value)
     .then(response => response.json())
     .then(data => {
       var x_array = [];
@@ -159,7 +160,7 @@ export default class LineGraph extends React.Component {
   }
 
   componentDidMount() {
-    fetch("http://localhost:3001/stocks")
+    fetch(URL + "/stocks")
     .then(response => response.json())
     .then(data => {
       var options = [];

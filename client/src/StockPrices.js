@@ -3,6 +3,7 @@ import { Select, Dropdown, Table, Divider, Tag } from 'antd';
 import { Tabs } from 'antd';
 import './App.css';
 import 'antd/dist/antd.css';
+import URL from './constants.js'
 import moment from 'moment';
 const { Option } = Select;
 
@@ -38,7 +39,7 @@ export default class StockPrice extends React.Component {
   }
 
   componentDidMount() {
-    fetch("http://localhost:3001/stocks")
+    fetch(URL + "/stocks")
     .then(response => response.json())
     .then(data => {
       var options = [];
@@ -50,7 +51,7 @@ export default class StockPrice extends React.Component {
   }
 
   generatePricesTable(value) {
-    fetch("http://localhost:3001/daily_price_all/" + value)
+    fetch(URL + "/daily_price_all/" + value)
     .then(response => response.json())
     .then(data => {
       for (var i = 0; i < data.length; i++) {

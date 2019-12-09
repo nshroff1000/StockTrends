@@ -2,6 +2,7 @@ import React from 'react';
 import { Select, Dropdown, Table, Divider, Tag } from 'antd';
 import { Tabs } from 'antd';
 import './App.css';
+import URL from './constants.js'
 import 'antd/dist/antd.css';
 import { Input } from 'antd';
 
@@ -31,7 +32,7 @@ export default class VolatileStockTable extends React.Component {
   }
 
   generateVolatileTable(value) {
-    fetch("http://localhost:3001/stdev/" + value)
+    fetch(URL + "/stdev/" + value)
     .then(response => response.json())
     .then(data => {
       this.setState({table_data: data});
