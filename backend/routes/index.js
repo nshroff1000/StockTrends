@@ -29,22 +29,6 @@ router.get('/stocks', async function(req, res) {
 	res.json(result.rows);
 });
 
-// /**
-// Returns the stock info for a particular stock
-// */
-// router.get('/stocks/:stock', async function(req, res) {
-// 	var current_stock = req.params.stock;
-
-// 	var connection = await oracledb.getConnection(dbconfig);
-// 	const result = await connection.execute(
-//   	`SELECT STOCK_NAME, STOCK_TICKER, STOCK_ID
-//    	FROM STOCKS WHERE STOCK_TICKER = :tick ORDER BY STOCK_ID`,
-//    	[current_stock],
-// 	);
-	
-// 	res.json(result.rows);
-// });
-
 /**
 Gets all the daily trend values for the given stock ticker.
 */
@@ -76,10 +60,16 @@ router.get('/daily_price_all/:stock', async function(req, res) {
 	var connection = await oracledb.getConnection(dbconfig);
 	const result = await connection.execute(
   	`SELECT STOCK_NAME, PRICE, DAILY_DATE
-FROM STOCKS s 
-    JOIN PRICES p ON s.stock_id = p.stock_id
-WHERE STOCK_TICKER = :stock
-	ORDER BY DAILY_DATE`,
+		FROM (
+		SELECT PRICE, STOCK_ID , DAILY_DATE
+		FROM PRICES) p 
+		JOIN (
+		SELECT STOCK_ID, STOCK_NAME
+		FROM STOCKS
+		WHERE STOCK_TICKER = :stock) s 
+		ON s.stock_id = p.stock_id
+		ORDER BY DAILY_DATE
+	`,
 	[current_stock],
 	);
 	
@@ -95,10 +85,19 @@ router.get('/weekly_volume/:stock', async function(req, res) {
 
 	var connection = await oracledb.getConnection(dbconfig);
 	const result = await connection.execute(
-  	`SELECT DAILY_DATE,
-       AVG(VOLUME) OVER (ORDER BY DAILY_DATE ASC ROWS 5 PRECEDING) AS AVG_VOLUME
-		FROM PRICES p JOIN STOCKS s ON p.STOCK_ID = s.STOCK_ID WHERE STOCK_TICKER = :stock 
-		AND DAILY_DATE >= TO_DATE('16-NOV-14','dd-MON-yy')`,
+  	`SELECT DAILY_DATE, AVG(VOLUME) OVER (
+	ORDER BY DAILY_DATE 
+	ASC ROWS 5 PRECEDING) AS AVG_VOLUME
+	FROM (
+	SELECT DAILY_DATE, VOLUME, STOCK_ID
+	FROM PRICES
+	WHERE DAILY_DATE >= TO_DATE('16-NOV-14','dd-MON-yy')) p 
+	JOIN (
+	SELECT STOCK_ID
+	FROM STOCKS
+	WHERE STOCK_TICKER = :stock) s 
+	ON p.STOCK_ID = s.STOCK_ID 
+	`,
 		[current_stock]
 	);
 	res.json(result.rows);
@@ -156,10 +155,19 @@ router.get('/stdev_week/:stock', async function(req, res) {
 
 	var connection = await oracledb.getConnection(dbconfig);
 	const result = await connection.execute(
-  	`SELECT DAILY_DATE,
-       STDDEV(PRICE) OVER (ORDER BY DAILY_DATE ASC ROWS 5 PRECEDING) AS STD_PRICE
-		FROM PRICES p JOIN STOCKS s ON p.STOCK_ID = s.STOCK_ID WHERE STOCK_TICKER = :stock 
-		AND DAILY_DATE >= TO_DATE('16-NOV-14','dd-MON-yy')`,
+  	`SELECT DAILY_DATE, STDDEV(PRICE) OVER (
+	ORDER BY DAILY_DATE 
+	ASC ROWS 5 PRECEDING) AS STD_PRICE
+	FROM (
+	SELECT STOCK_ID, PRICE, DAILY_DATE
+	FROM PRICES
+	WHERE DAILY_DATE >= TO_DATE('16-NOV-14','dd-MON-yy')) p 
+	JOIN (
+	SELECT STOCK_ID
+	FROM STOCKS
+	WHERE STOCK_TICKER = :stock) s 
+	ON p.STOCK_ID = s.STOCK_ID 
+	`,
 		[current_stock]
 	);
 	res.json(result.rows);

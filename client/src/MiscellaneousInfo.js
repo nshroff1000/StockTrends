@@ -203,8 +203,8 @@ export default class MiscellaneousInfo extends React.Component {
 
   generateMinMaxPrice() {
     return (<Descriptions bordered>
-      <Descriptions.Item label="Min Price">{this.state.min_price}</Descriptions.Item>
-      <Descriptions.Item label="Max Price">{this.state.max_price}</Descriptions.Item>
+      <Descriptions.Item label="Min Price">{Math.round(this.state.min_price * 100)/100}</Descriptions.Item>
+      <Descriptions.Item label="Max Price">{ Math.round(this.state.max_price * 100)/100}</Descriptions.Item>
     </Descriptions>)
   }
 
@@ -223,7 +223,7 @@ export default class MiscellaneousInfo extends React.Component {
         placeholder="Select a stock" 
         style={{ width: 300 }} 
         filterOption={(input, option) =>
-          option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+          option.props.children.toString().toLowerCase().indexOf(input.toString().toLowerCase()) >= 0
         }
         onChange={this.handleChange.bind(this)}>
           {this.state.dropdown_data}

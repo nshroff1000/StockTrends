@@ -62,6 +62,7 @@ export default class RecentNewsInfo extends React.Component {
     <Descriptions bordered> 
     {this.getDescriptions()}
     </Descriptions>
+    <p align="right">Powered by Google News API</p>
     </div>)
   }
 
@@ -76,7 +77,7 @@ export default class RecentNewsInfo extends React.Component {
         placeholder="Select a stock"
         style={{ width: 300}}
         filterOption={(input, option) =>
-          option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+          option.props.children.toString().toLowerCase().indexOf(input.toString().toLowerCase()) >= 0
         }
         onChange={this.handleChange.bind(this)}>
           {this.state.dropdown_data}
