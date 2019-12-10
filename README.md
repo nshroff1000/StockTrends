@@ -1,4 +1,5 @@
 We have three folder directories above.
+
 The client folder is the front-end code.
 The backend folder is the back-end code.
 The database_population is the code we used to call the APIs to populate the csv files that we loaded into the database.
