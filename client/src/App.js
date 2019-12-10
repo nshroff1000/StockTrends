@@ -10,6 +10,7 @@ import StockTable from './StockTable.js';
 import StockPrice from './StockPrices.js';
 import VolatileStockTable from './VolatileStocks.js'
 import MiscellaneousInfo from './MiscellaneousInfo.js'
+import RecentNewsInfo from './RecentNewsInfo.js'
 
 const { TabPane } = Tabs;
 const { Option } = Select;
@@ -26,7 +27,7 @@ function App() {
     <div>
       <Tabs tabBarStyle={{textAlign: 'center'}} defaultActiveKey="1">
         <TabPane tab="Home Page" key="1">
-        <div style={{"padding-left": "40px", "padding-right": "40px"}}>
+        <div style={{"paddingLeft": "40px", "paddingRight": "40px"}}>
 <br/>
 <br/>
 <br/>
@@ -68,6 +69,12 @@ Miscellaneous Information: This page displays three things: 1) The correlation b
 </h5>
 </li>
 
+<li>
+<h5>
+Recent Stock News: This page displays news for a selected company.
+</h5>
+</li>
+
 </ol>
 
 <br/>
@@ -89,6 +96,9 @@ Miscellaneous Information: This page displays three things: 1) The correlation b
         </TabPane>
         <TabPane tab="Miscellaneous Information" key="6">
           <MiscellaneousInfo/>
+        </TabPane>
+        <TabPane tab="Recent Company News" key="7">
+          <RecentNewsInfo/>
         </TabPane>
       </Tabs>
     </div>
