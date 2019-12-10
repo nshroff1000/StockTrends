@@ -6,17 +6,6 @@ const oracledb = require('oracledb');
 oracledb.outFormat = oracledb.OUT_FORMAT_OBJECT;
 const dbconfig = require('../db-config.js');
 
-async function test() {
-var connection = await oracledb.getConnection(dbconfig);
-const result = await connection.execute(
-  `SELECT STOCK_NAME, STOCK_TICKER
-   FROM STOCKS
-   WHERE STOCK_TICKER = :tick`,
-  ['GOOG'],  // bind value for :id
-);
-return result;
-}
-
 /**
 Returns all the stock names.
 */
