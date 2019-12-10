@@ -23,7 +23,8 @@ export default class MiscellaneousInfo extends React.Component {
       min_price: null,
       max_price: null,
       startDate: null,
-      endDate: null
+      endDate: null,
+      error: false
     }
   }
 
@@ -40,7 +41,7 @@ export default class MiscellaneousInfo extends React.Component {
   }
 
   handleChange(value) {
-    this.setState({chosen_stock: value, min_price: null, max_price: null, startDate: null, endDate: null})
+    this.setState({chosen_stock: value, min_price: null, max_price: null, startDate: null, endDate: null, error: false})
     this.getTrendValues(value);
     this.getVolatilityValues(value);
     this.getVolumeValues(value);
@@ -179,6 +180,14 @@ export default class MiscellaneousInfo extends React.Component {
     var date_two = value[1];
     var formatted_dateOne = date_one.toDate().toLocaleDateString("en-US");
     var formatted_dateTwo = date_two.toDate().toLocaleDateString("en-US");
+
+    if (date_one > new Date("11-08-2019")) {
+      this.setState({error: true, min_price: null, max_price: null})
+      return;
+    } else {
+      this.setState({error: false})
+    }
+
     this.getMaxPrice(formatted_dateOne, formatted_dateTwo);
     this.getMinPrice(formatted_dateOne, formatted_dateTwo);
   }
@@ -212,6 +221,10 @@ export default class MiscellaneousInfo extends React.Component {
     return (<div align="center">Pick dates to see the maximum and minimum stock price for a certain range <br/><br/> <RangePicker defaultValue={[this.state.startDate, this.state.endDate]} onChange={this.handlePicker.bind(this)}/></div>);
   }
 
+  renderErrorMessage() {
+    return (<div align="center">Please pick dates that are before 11-08-2019 (date of database population)</div>)
+  }
+
   render() {
     if (this.state.dropdown_data == null) {
       return "";
@@ -241,6 +254,7 @@ export default class MiscellaneousInfo extends React.Component {
       {this.state.chosen_stock == null ? "" : this.getRangePicker()}
       <br/>
       {this.state.min_price == null || this.state.max_price == null ? "" : this.generateMinMaxPrice()}
+      {this.state.error == false ? "" : this.renderErrorMessage()}
       </div>
     }
   }
