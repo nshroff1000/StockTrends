@@ -47,6 +47,7 @@ export default class MiscellaneousInfo extends React.Component {
     this.getVolumeValues(value);
   }
 
+  //Retrieve daily trend values
   getTrendValues(value) {
     fetch(URL + "/daily_trends/" + value)
     .then(response => response.json())
@@ -59,6 +60,7 @@ export default class MiscellaneousInfo extends React.Component {
     })
   }
 
+  //Retrieve weekly volatility values
   getVolatilityValues(value) {
     fetch(URL + "/stdev_week/" + value)
     .then(response => response.json())
@@ -71,6 +73,7 @@ export default class MiscellaneousInfo extends React.Component {
     })
   }
 
+  //Retrieve weekly volume values
   getVolumeValues(value) {
     fetch(URL + "/weekly_volume/" + value)
     .then(response => response.json())
@@ -83,6 +86,7 @@ export default class MiscellaneousInfo extends React.Component {
     })
   }
 
+  //Calculates the correlation between the volatility data and the trend data
   calculateCorrelationVolatility() {
     var trend_data = this.state.trend_data;
     var volatility_data = this.state.volatility_data;
@@ -129,6 +133,7 @@ export default class MiscellaneousInfo extends React.Component {
     return <Descriptions.Item label="Correlation Between Volatility and Search Trends">{rounded}</Descriptions.Item>
   }
 
+  //Calculates the correlation between the volume data and the trend data.
   calculateCorrelationVolume() {
     var trend_data = this.state.trend_data;
     var volume_data = this.state.volume_data;
@@ -174,6 +179,7 @@ export default class MiscellaneousInfo extends React.Component {
     return <Descriptions.Item label="Correlation Between Volume and Search Trends">{rounded}</Descriptions.Item>
   }
 
+  //Handles date inputs from the Data Picker object
   handlePicker(value) {
     this.setState({startDate: date_one, endDate: date_two})
     var date_one = value[0];
@@ -192,7 +198,7 @@ export default class MiscellaneousInfo extends React.Component {
     this.getMinPrice(formatted_dateOne, formatted_dateTwo);
   }
 
-
+  //Gets the min price between a certain pair of dates
   getMinPrice(dateOne, dateTwo) {
     fetch(URL + "/min_price/" + this.state.chosen_stock + "?first_date=" + dateOne + "&second_date=" + dateTwo)
     .then(response => response.json())
@@ -201,7 +207,7 @@ export default class MiscellaneousInfo extends React.Component {
     })
   }
 
-
+  //Gets the max price between a certain pair of dates
   getMaxPrice(dateOne, dateTwo) {
     fetch(URL + "/max_price/" + this.state.chosen_stock + "?first_date=" + dateOne + "&second_date=" + dateTwo)
     .then(response => response.json())
@@ -210,6 +216,7 @@ export default class MiscellaneousInfo extends React.Component {
     })
   }
 
+  //Renders the Min and Max price on the screen
   generateMinMaxPrice() {
     return (<Descriptions bordered>
       <Descriptions.Item label="Min Price">{Math.round(this.state.min_price * 100)/100}</Descriptions.Item>
@@ -221,6 +228,7 @@ export default class MiscellaneousInfo extends React.Component {
     return (<div align="center">Pick dates to see the maximum and minimum stock price for a certain range <br/><br/> <RangePicker defaultValue={[this.state.startDate, this.state.endDate]} onChange={this.handlePicker.bind(this)}/></div>);
   }
 
+  //Renders error message for the case when the selected date is out of the range.
   renderErrorMessage() {
     return (<div align="center">Please pick dates that are before 11-08-2019 (date of database population)</div>)
   }

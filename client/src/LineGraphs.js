@@ -30,6 +30,7 @@ export default class LineGraph extends React.Component {
     this.generateVolumeLine(value);
   }
 
+  //Creates trend line for graph 2
   generateTrendLine(value) {
     fetch(URL + "/daily_trends/" + value)
     .then(response => response.json())
@@ -62,6 +63,7 @@ export default class LineGraph extends React.Component {
     })
   }
 
+  // Creates price line for graph 1
   generatePricesLine(value) {
     fetch(URL + "/daily_price/" + value)
     .then(response => response.json())
@@ -94,6 +96,7 @@ export default class LineGraph extends React.Component {
     })
   }
 
+  //Creates volatility line used in graph 3
   generateVolatilityLine(value) {
     fetch(URL + "/stdev_week/" + value)
     .then(response => response.json())
@@ -126,6 +129,7 @@ export default class LineGraph extends React.Component {
     })
   }
 
+  //Creates volume line used in graph 4
   generateVolumeLine(value) {
     fetch(URL + "/weekly_volume/" + value)
     .then(response => response.json())
@@ -171,6 +175,7 @@ export default class LineGraph extends React.Component {
     });
   }
 
+  //Renders trend line for graph 2
   renderTrendLine() {
     return  (<Line 
           height={300}
@@ -199,6 +204,7 @@ export default class LineGraph extends React.Component {
           />) 
   }
 
+  //Renders price line for graph 1
   renderPriceLine() {
     return  (<Line 
           height={300}
@@ -255,6 +261,7 @@ export default class LineGraph extends React.Component {
           />) 
   }
 
+  //Renders graph 3
   renderOverLayLine() {
     var fin_dict = {}
     var trend_info = this.state.trend_data;
@@ -370,7 +377,7 @@ export default class LineGraph extends React.Component {
           />) 
   }
 
-
+  //Renders graph 4
   renderVolumeOverLayLine() {
     var fin_dict = {}
     var trend_info = this.state.trend_data;
@@ -512,11 +519,6 @@ export default class LineGraph extends React.Component {
       {this.state.trend_data == null || this.state.price_data == null ? "" : this.renderTrendLine()}
       </div>
       <br/>
-      {/*
-      <div style={{height: 300}}>
-      {this.state.volatility_data == null || this.state.trend_data == null || this.state.price_data == null ? "" : this.renderVolatilityLine()}
-      </div>
-      */}
       <div style={{height: 300}}>
       {this.state.volatility_data == null || this.state.trend_data == null ? "" : this.renderOverLayLine()}
       </div>

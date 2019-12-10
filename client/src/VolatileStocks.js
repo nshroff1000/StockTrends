@@ -31,6 +31,7 @@ export default class VolatileStockTable extends React.Component {
     ];
   }
 
+  //Retrieves standard deviation data using the stdev api call
   generateVolatileTable(value) {
     fetch(URL + "/stdev/" + value)
     .then(response => response.json())
@@ -47,6 +48,7 @@ export default class VolatileStockTable extends React.Component {
       this.generateVolatileTable(event.target.value);
   }
 
+  //Renders the table
   renderPriceTable() {
     return <Table dataSource={this.state.table_data} columns={this.columns}/>
   }

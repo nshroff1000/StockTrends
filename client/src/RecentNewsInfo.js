@@ -30,6 +30,7 @@ export default class RecentNewsInfo extends React.Component {
     });
   }
 
+  //Retrives article info by calling the Google Trends API
   generateNewsInfo(value) { 
     fetch("https://newsapi.org/v2/everything?q="  + value + "&apiKey=ee8b906d96c444878e392d52ede018a7")
     .then(response => response.json())
@@ -43,6 +44,7 @@ export default class RecentNewsInfo extends React.Component {
     this.generateNewsInfo(value);
   }
 
+  //Formats and extracts relevant information from each article
   getDescriptions() {
     var articles = this.state.news_data
     var articles_list = articles['articles']
@@ -56,7 +58,7 @@ export default class RecentNewsInfo extends React.Component {
     return descriptions_list
   }
 
-
+  //Renders the articles description table on the screen.
   renderDescriptionsTable() {
     return (<div>
     <Descriptions bordered> 

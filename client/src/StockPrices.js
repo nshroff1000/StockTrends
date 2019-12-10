@@ -52,6 +52,7 @@ export default class StockPrice extends React.Component {
     });
   }
 
+  //Retrieves data from the prices table using the api call to daily_price_all
   generatePricesTable(value) {
     fetch(URL + "/daily_price_all/" + value)
     .then(response => response.json())
@@ -70,6 +71,7 @@ export default class StockPrice extends React.Component {
     this.generatePricesTable(value);
   }
 
+  //Edits price table based on search filters.
   editPricesTable(value) {
     var new_table_data = [];
     this.state.original_data.forEach(entry => {
@@ -88,6 +90,7 @@ export default class StockPrice extends React.Component {
       this.setState({table_data: this.state.original_data});
   }
 
+  //Renders price table
   renderPriceTable() {
     return (<div>
     <Table rowKey="STOCK_ID" dataSource={this.state.table_data} columns={this.columns}/>
@@ -95,7 +98,6 @@ export default class StockPrice extends React.Component {
   }
 
   renderInput() {
-
     return (<div>
     Filter Table by Date  &nbsp;
     <Input style={{ width: 300 }} value = {this.state.input_value} onChange = {this.handleChangeInput.bind(this)} placeholder="Enter a date to search by date" />
